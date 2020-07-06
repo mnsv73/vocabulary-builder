@@ -1,5 +1,6 @@
 import requests
 import json
+import csv
 
 #getting user input
 x = input('Enter a word to search meaning for: ')
@@ -7,15 +8,18 @@ word = 'https://api.dictionaryapi.dev/api/v2/entries/en/' + x
 request = requests.get(word)
 data = json.loads(request.text)
 meaning = data[0]['meanings'][0]['definitions'][0]['definition']
-synonyms = data[0]['meanings'][0]['definitions'][0]['synonyms']
-#print(meaning,'\n',synonyms)
+print(meaning)
 
-muse = 'https://api.datamuse.com/words?rel_gen=' + x
-mureq = requests.get(muse)
-data1 = json.loads(mureq.text)
-#for entry in data1:
- #   print(entry['word'], entry['score'])
+muse2 = 'https://api.datamuse.com/words?rel_trg=' + x
+mureq2 = requests.get(muse2)
+data2 = json.loads(mureq2.text)
 
-word2 = 'https://datayze.com/word-analyzer?word=book'
-req2 = requests.get(word2)
-print(req2.text)
+csv_file = open('relatedlist.csv', 'w')
+csv_writer = csv.writer(csv_file, lineterminator='\r')
+
+for entry in data2:
+    csv_writer.writerow([entry['word']])
+    print(entry['word'])
+
+csv_file.close()
+
